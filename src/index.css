@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
+@import "tailwindcss";
+
+h1{
+    font-family: "Archivo Black", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
+@layer components {
+  .btn-fancy {
+    @apply px-6 py-4 text-lg bg-[#F4D35E] text-black font-semibold relative 
+    rounded-md z-30 cursor-pointer overflow-hidden transition-all duration-700 ;
+
+    /* hover state for text shadow */
+    @apply hover:text-white;
+
+    /* ::after pseudo-element styles */
+    &::after {
+      content: '';
+      @apply absolute bottom-0 left-5 h-1 w-1 bg-black text-white translate-y-full 
+      rounded-md transition-all duration-700 -z-20;
+    }
+
+    &:hover::after {
+      @apply scale-[300];
+    }
+  }
+}
+
+@layer components{
+  .col{
+    @apply text-[#F4D35E]
+  }
+}
