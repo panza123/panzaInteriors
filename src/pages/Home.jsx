@@ -14,33 +14,52 @@ const images = [background1, background2, background3];
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Background image slider
+  // Background image slider with hover pause
   useEffect(() => {
+    if (isHovered) return;
     const interval = setInterval(() => {
-      setCurrentIndex(prev => (prev + 1) % images.length);
+      setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isHovered]);
 
   return (
     <section className="w-full min-h-screen bg-white text-black">
-      {/* NavBar - now properly fixed in its own component */}
+      {/* NavBar */}
       <NavBar />
 
-      {/* Background Slider */}
+      {/* Background Slider with fade effect */}
       <div
-        className="w-full h-screen bg-cover bg-center transition-all duration-[1500ms] ease-in-out"
-        style={{ backgroundImage: `url(${images[currentIndex]})` }}
+        className="relative w-full h-screen overflow-hidden"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="w-full h-full flex items-center justify-start px-4 sm:px-8 md:px-12 lg:px-16 pt-24 bg-black/40">
-          <div className="text-left max-w-3xl z-10">
-            <h3 className="uppercase text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 col">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 w-full h-full transition-opacity duration-[1500ms] ease-in-out ${
+              index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
+            }`}
+          >
+            <img
+              src={image}
+              alt={`Slide ${index + 1}`}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+
+        {/* Overlay Text */}
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-start px-4 sm:px-8 md:px-12 lg:px-16 pt-24 z-20">
+          <div className="text-left max-w-3xl z-30">
+            <h3 className="uppercase text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 col col">
               Panza Commercial Interiors
             </h3>
             <p className="text-base sm:text-lg md:text-2xl leading-relaxed text-gray-100">
@@ -85,14 +104,15 @@ const Home = () => {
               src={sectionImage}
               alt="Why Choose Us"
               className="w-full h-auto max-h-[500px] rounded-lg shadow-xl object-cover"
+              loading='lazy'
             />
           </div>
         </div>
       </div>
 
       {/* Home Image Component */}
-      <div className="w-full ">
-        <HomeImage  />
+      <div className="w-full">
+        <HomeImage />
       </div>
 
       {/* About Section */}
@@ -134,7 +154,7 @@ const Home = () => {
       </div>
 
       {/* Testimony Grid */}
-      <div className="w-full ">
+      <div className="w-full">
         <TestimonyGrid />
       </div>
     </section>
